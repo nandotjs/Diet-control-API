@@ -60,7 +60,7 @@ export async function mealRoutes(app: FastifyInstance) {
       return { meal }
     })
 
-    // Delete meal
+    // Delete meal by id
     app.delete('/:mealId', {preHandler: [checkSessionIdExists]}, async (req, rep) => {
 
       const paramsSchema = z.object({ mealId: z.string().uuid() })
