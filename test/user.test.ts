@@ -3,7 +3,7 @@ import request from 'supertest'
 import { app } from '../src/app'
 import { execSync } from 'node:child_process'
 
-describe('Transactions routes', () => {
+describe('Users routes', () => {
 
     beforeAll(async () => await app.ready())
     afterAll(async () => await app.close())
@@ -41,6 +41,7 @@ describe('Transactions routes', () => {
         .get('/user/details')
         .set('Cookie', cookies)
         .expect(200)
+
         console.log(userDetails.body)
     })
     
