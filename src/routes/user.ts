@@ -49,10 +49,10 @@ export async function userRoutes(app: FastifyInstance) {
             console.log('201 Created')
             console.log({sessionId})
 
-            return rep.status(201).send('Created');
+            return rep.status(201).send('User created')
         } catch (error) {
-            console.error('Cant create user:', error);
-            return rep.status(500).send({ error });
+            console.error('Cant create user:', error)
+            return rep.status(500).send({ error })
         }
 
         

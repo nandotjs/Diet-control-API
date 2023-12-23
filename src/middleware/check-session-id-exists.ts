@@ -1,5 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import knex from "knex"
+import { knex } from "../database"
+
 
 export async function checkSessionIdExists(req: FastifyRequest, rep: FastifyReply) {
     
@@ -10,13 +11,15 @@ export async function checkSessionIdExists(req: FastifyRequest, rep: FastifyRepl
             error: 'Unauthorized'
         })
     }
-    
-    const user = await knex('users').where('session_id', sessionId).first()
+   
+    const user = await knex('users')
+    .where({ session_id: sessionId})
+    .first()
     
     if (!user) {
         return rep.status(401).send({ error: 'Unauthorized' })
     }
 
-    req.user = user
+    req.user = user as { id: string; session_id: string; name: string; email: string; created_at: string };
 
 }
