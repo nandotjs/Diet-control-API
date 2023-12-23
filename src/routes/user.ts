@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify"
 import { z } from 'zod'
 import { knex } from '../database'
 import { randomUUID } from "crypto"
+import { checkSessionIdExists } from "../middleware/check-session-id-exists"
 
 export async function userRoutes(app: FastifyInstance) {
 
@@ -57,4 +58,30 @@ export async function userRoutes(app: FastifyInstance) {
 
         
     })
+
+    // User details
+    app.get('/details', { preHandler: [checkSessionIdExists] }, async (req, rep) => {
+        
+        const totalMealsOnDiet = await knex('meals')
+        .where({ user_id: req.user?.id, is_on_diet: true })
+        .count('id', { as: 'total' })
+        .first()
+
+        const totalMealsOffDiet = await knex('meals')
+        .where({ user_id: req.user?.id, is_on_diet: false })
+        .count('id', { as: 'total' })
+        .first()
+
+        const totalMeals = await knex('meals')
+        .where({ user_id: req.user?.id })
+        .count('id', { as: 'total' })
+        .first()
+
+        return rep.send({
+            totalMeals,
+            totalMealsOnDiet,
+            totalMealsOffDiet
+        })
+    })
+
 }
